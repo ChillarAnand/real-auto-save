@@ -48,11 +48,21 @@
 ;;; Code:
 
 
-(defvar real-auto-save-alist nil
-  "List of buffers that will be auto saved truely.")
+(defgroup real-auto-save nil
+  "Save buffers automatically."
+  :group 'convenience
+  :prefix "real-auto-save-")
 
-(defvar real-auto-save-interval 10
-  "Time interval of real auto save.")
+(defcustom real-auto-save-interval 10
+  "Time interval of real auto save."
+  :type 'integer
+  :set (lambda (var val)
+         (setq real-auto-save-interval val))
+  :get (lambda (val)
+         (real-auto-save-interval)))
+
+(defvar real-auto-save-alist nil
+  "List of buffers that will be saved automatically.")
 
 (defvar real-auto-save-p t
   "Toggle real auto save.")
@@ -61,48 +71,46 @@
   "Real auto save timer.")
 
 (define-minor-mode real-auto-save-mode
-  "Save your buffers automatically.")
+  "Save your buffers automatically."
+  :lighter " ras"
+  :keymap nil
+  :version "0.4"
+  :global t
 
-(defun real-auto-save ()
-  "Save file automatically if real-auto-save is on."
-  (interactive)
-  (if real-auto-save-p
-      (progn
-	(save-excursion
-	  (dolist (elem real-auto-save-alist)
-	    (set-buffer elem)
-	    (if (and (buffer-file-name) (buffer-modified-p))
-		(progn
-		  (save-buffer))))))))
+  (when (not real-auto-save-mode) ;; OFF
+    (when (buffer-file-name)
+      (setq real-auto-save-alist (remove (buffer-name) real-auto-save-alist))))
 
-(defun turn-on-real-auto-save ()
-  "Turn on real-auto-save."
-  (interactive)
-  (if (buffer-file-name)
+  (when real-auto-save-mode ;; ON
+
+    (defun real-auto-save-buffer ()
+      "Automatically save buffer in real-auto-save-mode."
       (progn
-	(unless real-auto-save-timer
+        (save-excursion
+          (dolist (elem real-auto-save-alist)
+            (set-buffer elem)
+            (if (and (buffer-file-name) (buffer-modified-p))
+                (progn
+                  (save-buffer)))))))
+
+    (if (buffer-file-name)
+        (progn
+          (unless real-auto-save-timer
 	    (progn
 	      (setq real-auto-save-timer (timer-create))
 	      (timer-set-time real-auto-save-timer (current-time)
                               real-auto-save-interval)
-	      (timer-set-function real-auto-save-timer 'real-auto-save)
+	      (timer-set-function real-auto-save-timer 'real-auto-save-buffer)
 	      (timer-activate real-auto-save-timer)))
-	(add-to-list 'real-auto-save-alist (buffer-name)))))
+          (add-to-list 'real-auto-save-alist (buffer-name)))))
 
-(defun turn-off-real-auto-save ()
-  "Turn off real-auto-save."
-  (interactive)
-  (when (buffer-file-name)
-    (setq real-auto-save-alist (remove (buffer-name) real-auto-save-alist))))
+  (defun real-auto-save-remove-buffer-from-alist ()
+    "If a buffer is killed, remove it from real-auto-save-alist."
+    (if (member (buffer-name) real-auto-save-alist)
+        (setq real-auto-save-alist
+              (delete (buffer-name) real-auto-save-alist))))
 
-(defun real-auto-save-remove-buffer-from-alist ()
-  "If a buffer is killed, remove it from real-auto-save-alist."
-  (if (member (buffer-name) real-auto-save-alist)
-      (setq real-auto-save-alist
-            (delete (buffer-name) real-auto-save-alist))))
-
-(add-hook 'kill-buffer-hook #'real-auto-save-remove-buffer-from-alist)
-(add-hook 'prog-mode-hook 'foo-mode)
+  (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-alist))
 
 
 (provide 'real-auto-save)
