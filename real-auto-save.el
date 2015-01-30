@@ -61,9 +61,6 @@
 (defvar real-auto-save-alist nil
   "List of buffers that will be saved automatically.")
 
-(defvar real-auto-save-p t
-  "Toggle real auto save.")
-
 (defvar real-auto-save-timer nil
   "Real auto save timer.")
 
@@ -87,13 +84,13 @@
           (dolist (elem real-auto-save-alist)
             (set-buffer elem)
             (if (and (buffer-file-name) (buffer-modified-p))
-                (progn
-                  (save-buffer)))))))
+                (save-buffer))))))
 
-    (if (buffer-file-name)
+    (if (or buffer-file-name
+            (not (eq real-auto-save-interval 10)))
         (progn
           (if (not (and real-auto-save-timer
-                     (eq real-auto-save-interval 10)))
+                        (eq real-auto-save-interval 10)))
 	    (progn
 	      (setq real-auto-save-timer (timer-create))
 	      (timer-set-time real-auto-save-timer (current-time)
