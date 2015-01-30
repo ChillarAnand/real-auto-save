@@ -56,10 +56,7 @@
 (defcustom real-auto-save-interval 10
   "Time interval of real auto save."
   :type 'integer
-  :set (lambda (var val)
-         (setq real-auto-save-interval val))
-  :get (lambda (val)
-         (real-auto-save-interval)))
+  :group 'real-auto-save)
 
 (defvar real-auto-save-alist nil
   "List of buffers that will be saved automatically.")
@@ -95,7 +92,8 @@
 
     (if (buffer-file-name)
         (progn
-          (unless real-auto-save-timer
+          (if (not (and real-auto-save-timer
+                     (eq real-auto-save-interval 10)))
 	    (progn
 	      (setq real-auto-save-timer (timer-create))
 	      (timer-set-time real-auto-save-timer (current-time)
