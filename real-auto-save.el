@@ -26,24 +26,20 @@
 
 ;; Put this file in a folder where Emacs can find it.
 ;;
-;; Add following lines to your .emacs initialization file to enable auto save
-;; in all programming modes.
+;; Add following lines to your .emacs initialization file
+;; to enable auto save in all programming modes.
 ;;
 ;;     (require 'real-auto-save)
 ;;     (add-hook 'prog-mode-hook 'turn-on-real-auto-save)
 ;;
 ;;
-;; Auto save interval is 10 seconds by default. You can change it:
+;; Auto save interval is 10 seconds by default.
+;; You can change it to whatever value you want.
 ;;
 ;;     (setq real-auto-save-interval 5) ;; in seconds
 ;;
 ;;
-;; If you don't want to save some buffers automatically, You can specify them:
-;; For example, Magit creates new buffer "COMMIT_EDITMSG" for every commit.
-;;
-;;    (add-to-list real-auto-save-ignore-list "COMMIT_EDITMSG")
-;;
-;;
+
 
 ;;; Code:
 
@@ -64,44 +60,49 @@
 (defvar real-auto-save-timer nil
   "Real auto save timer.")
 
+(defun real-auto-save-buffers ()
+  "Automatically save all buffers in real-auto-save-alist."
+  (progn
+    (save-excursion
+      (dolist (elem real-auto-save-alist)
+        (set-buffer elem)
+        (if (and (buffer-file-name) (buffer-modified-p))
+            (save-buffer))))))
+
+(defun real-auto-save-start-timer ()
+  "Start real-auto-save-timer."
+  (setq real-auto-save-timer
+        (run-at-time (current-time)  real-auto-save-interval
+                     'real-auto-save-buffers)))
+
+(defun real-auto-save-restart-timer ()
+  "Restart a real-auto-save-timer."
+  (if real-auto-save-timer
+      (progn
+        (cancel-timer real-auto-save-timer)
+        (real-auto-save-start-timer))))
+
+(defun real-auto-save-remove-buffer-from-alist ()
+  "If a buffer is killed, remove it from real-auto-save-alist."
+  (if (member (buffer-name) real-auto-save-alist)
+      (setq real-auto-save-alist
+            (delete (buffer-name) real-auto-save-alist))))
+
 (define-minor-mode real-auto-save-mode
   "Save your buffers automatically."
-  :lighter " ras"
+  :lighter " RAS"
   :keymap nil
   :version "0.4"
-  :global t
 
   (when (not real-auto-save-mode) ;; OFF
     (when (buffer-file-name)
       (setq real-auto-save-alist (remove (buffer-name) real-auto-save-alist))))
 
   (when real-auto-save-mode ;; ON
-
-    (defun real-auto-save-buffers ()
-      "Automatically save all buffers in real-auto-save-alist."
-      (progn
-        (save-excursion
-          (dolist (elem real-auto-save-alist)
-            (set-buffer elem)
-            (if (and (buffer-file-name) (buffer-modified-p))
-                (save-buffer))))))
-
     (if (buffer-file-name)
         (progn
-          (if (not real-auto-save-timer)
-	    (progn
-              (setq real-auto-save-timer (timer-create))
-	      (timer-set-time real-auto-save-timer (current-time)
-                              real-auto-save-interval)
-	      (timer-set-function real-auto-save-timer 'real-auto-save-buffers)
-	      (timer-activate real-auto-save-timer)))
+          (real-auto-save-start-timer)
           (add-to-list 'real-auto-save-alist (buffer-name)))))
-
-  (defun real-auto-save-remove-buffer-from-alist ()
-    "If a buffer is killed, remove it from real-auto-save-alist."
-    (if (member (buffer-name) real-auto-save-alist)
-        (setq real-auto-save-alist
-              (delete (buffer-name) real-auto-save-alist))))
 
   (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-alist))
 
