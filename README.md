@@ -16,9 +16,3 @@ Add following lines to your .emacs initialization file to enable auto save in al
 Auto save interval is 10 seconds by default. You can change it:
 
      (setq real-auto-save-interval 5) ;; in seconds
-
-
-If you don't want to save some buffers automatically, You can specify them:
-For example, Magit creates new buffer "COMMIT_EDITMSG" for every commit.
-
-    (add-to-list real-auto-save-ignore-list "COMMIT_EDITMSG")
