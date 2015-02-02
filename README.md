@@ -10,7 +10,7 @@ Download `real-auto-save.el` and put this file in a folder where Emacs can find 
 Add following lines to your .emacs initialization file to enable auto save in all programming modes.
 
      (require 'real-auto-save)
-     (add-hook 'prog-mode-hook 'turn-on-real-auto-save)
+     (add-hook 'prog-mode-hook 'real-auto-save-mode)
 
 
 Auto save interval is 10 seconds by default. You can change it:
