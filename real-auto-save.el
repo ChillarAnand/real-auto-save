@@ -103,6 +103,8 @@
   (when real-auto-save-mode ;; ON
     (if (buffer-file-name)
         (progn
+          (if real-auto-save-timer
+              (cancel-timer real-auto-save-timer))
           (real-auto-save-start-timer)
           (add-to-list 'real-auto-save-alist (buffer-name))))
 
