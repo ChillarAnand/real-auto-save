@@ -12,7 +12,7 @@ Installation
 
 MELPA
 -----
-You can install a snapshot version of Projectile from the [MELPA](http://melpa.org/#/real-auto-save) repository. 
+You can install a snapshot of real-auto-save from the [MELPA](http://melpa.org/#/real-auto-save) repository. 
 
 
 Github
