@@ -80,9 +80,14 @@
   (progn
     (save-excursion
       (dolist (elem real-auto-save-alist)
-        (set-buffer elem)
-        (if (and (buffer-file-name) (buffer-modified-p))
-            (save-buffer))))
+        (if (get-buffer elem)
+            (progn
+              (set-buffer elem)
+              (if (and (buffer-file-name) (buffer-modified-p))
+                  (condition-case nil
+                      (save-buffer)
+                    (error
+                     (ignore-errors))))))))
     (real-auto-save-restart-timer)))
 
 (defun real-auto-save-remove-buffer-from-alist ()
