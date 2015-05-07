@@ -55,7 +55,7 @@
   :type 'integer
   :group 'real-auto-save)
 
-(defvar real-auto-save-alist nil
+(defvar real-auto-save-buffers-list nil
   "List of buffers that will be saved automatically.")
 
 (defvar real-auto-save-timer nil
@@ -76,20 +76,20 @@
         (real-auto-save-start-timer))))
 
 (defun real-auto-save-buffers ()
-  "Automatically save all buffers in real-auto-save-alist."
+  "Automatically save all buffers in real-auto-save-buffers-list."
   (progn
     (save-excursion
-      (dolist (elem real-auto-save-alist)
+      (dolist (elem real-auto-save-buffers-list)
         (set-buffer elem)
         (if (and (buffer-file-name) (buffer-modified-p))
             (save-buffer))))
     (real-auto-save-restart-timer)))
 
-(defun real-auto-save-remove-buffer-from-alist ()
-  "If a buffer is killed, remove it from real-auto-save-alist."
-  (if (member (current-buffer) real-auto-save-alist)
-      (setq real-auto-save-alist
-            (delete (current-buffer) real-auto-save-alist))))
+(defun real-auto-save-remove-buffer-from-list ()
+  "If a buffer is killed, remove it from real-auto-save-buffers-list."
+  (if (member (current-buffer) real-auto-save-buffers-list)
+      (setq real-auto-save-buffers-list
+            (delete (current-buffer) real-auto-save-buffers-list))))
 
 (define-minor-mode real-auto-save-mode
   "Save your buffers automatically."
@@ -99,7 +99,7 @@
 
   (when (not real-auto-save-mode) ;; OFF
     (when (buffer-file-name)
-      (setq real-auto-save-alist (remove (current-buffer) real-auto-save-alist))))
+      (setq real-auto-save-buffers-list (remove (current-buffer) real-auto-save-buffers-list))))
 
   (when real-auto-save-mode ;; ON
     (if (buffer-file-name)
@@ -107,9 +107,9 @@
           (if real-auto-save-timer
               (cancel-timer real-auto-save-timer))
           (real-auto-save-start-timer)
-          (add-to-list 'real-auto-save-alist (current-buffer))))
+          (add-to-list 'real-auto-save-buffers-list (current-buffer))))
 
-    (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-alist)))
+    (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list)))
 
 
 (provide 'real-auto-save)
