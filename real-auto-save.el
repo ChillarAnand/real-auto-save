@@ -82,8 +82,7 @@
       (dolist (elem real-auto-save-alist)
         (set-buffer elem)
         (if (and (buffer-file-name) (buffer-modified-p))
-            (save-buffer)
-          )))
+            (save-buffer))))
     (real-auto-save-restart-timer)))
 
 (defun real-auto-save-remove-buffer-from-alist ()
