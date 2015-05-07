@@ -90,9 +90,9 @@
 
 (defun real-auto-save-remove-buffer-from-alist ()
   "If a buffer is killed, remove it from real-auto-save-alist."
-  (if (member (buffer-name) real-auto-save-alist)
+  (if (member (current-buffer) real-auto-save-alist)
       (setq real-auto-save-alist
-            (delete (buffer-name) real-auto-save-alist))))
+            (delete (current-buffer) real-auto-save-alist))))
 
 (define-minor-mode real-auto-save-mode
   "Save your buffers automatically."
@@ -102,7 +102,7 @@
 
   (when (not real-auto-save-mode) ;; OFF
     (when (buffer-file-name)
-      (setq real-auto-save-alist (remove (buffer-name) real-auto-save-alist))))
+      (setq real-auto-save-alist (remove (current-buffer) real-auto-save-alist))))
 
   (when real-auto-save-mode ;; ON
     (if (buffer-file-name)
@@ -110,7 +110,7 @@
           (if real-auto-save-timer
               (cancel-timer real-auto-save-timer))
           (real-auto-save-start-timer)
-          (add-to-list 'real-auto-save-alist (buffer-name))))
+          (add-to-list 'real-auto-save-alist (current-buffer))))
 
     (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-alist)))
 
