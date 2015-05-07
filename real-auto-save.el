@@ -82,9 +82,7 @@
       (dolist (elem real-auto-save-alist)
         (set-buffer elem)
         (if (and (buffer-file-name) (buffer-modified-p))
-            (if (verify-visited-file-modtime)
-                (save-buffer)
-              (message (format"%s has changed since visited or saved.  Not saved automatically." elem)))
+            (save-buffer)
           )))
     (real-auto-save-restart-timer)))
 
