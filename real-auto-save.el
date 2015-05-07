@@ -85,8 +85,8 @@
             (if (verify-visited-file-modtime)
                 (save-buffer)
               (message (format"%s has changed since visited or saved.  Not saved automatically." elem)))
-          ))
-      (real-auto-save-restart-timer))))
+          )))
+    (real-auto-save-restart-timer)))
 
 (defun real-auto-save-remove-buffer-from-alist ()
   "If a buffer is killed, remove it from real-auto-save-alist."
