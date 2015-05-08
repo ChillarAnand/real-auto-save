@@ -27,3 +27,11 @@ Add following lines to your .emacs initialization file to enable auto save in al
 Auto save interval is 10 seconds by default. You can change it:
 
      (setq real-auto-save-interval 5) ;; in seconds
+
+
+Acknowledgments
+---------------
+
+Thanks to [Steve Purcell](https://github.com/purcell) for reviewing and providing help with development.
+
+Thanks to all contributors!
