@@ -110,7 +110,7 @@
           (add-to-list 'real-auto-save-buffers-list (current-buffer))))
 
     (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list)))
-
+)
 
 (provide 'real-auto-save)
 ;;; real-auto-save.el ends here
