@@ -109,7 +109,7 @@
           (real-auto-save-start-timer)
           (add-to-list 'real-auto-save-buffers-list (current-buffer))))
 
-    (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list)))
+    (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list))))
 
 
 (provide 'real-auto-save)
