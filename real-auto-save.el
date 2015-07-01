@@ -99,7 +99,7 @@
 
   (when (not real-auto-save-mode) ;; OFF
     (when (buffer-file-name)
-      (real-auto-save-remove-buffer-from-list))
+      (real-auto-save-remove-buffer-from-list)))
 
   (when real-auto-save-mode ;; ON
     (if (buffer-file-name)
@@ -108,8 +108,7 @@
               (cancel-timer real-auto-save-timer))
           (real-auto-save-start-timer)
           (add-to-list 'real-auto-save-buffers-list (current-buffer))))
-
-    (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list))))
+    (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list)))
 
 
 (provide 'real-auto-save)
