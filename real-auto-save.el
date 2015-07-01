@@ -71,9 +71,8 @@
 (defun real-auto-save-restart-timer ()
   "Restart real-auto-save-timer."
   (if real-auto-save-timer
-      (progn
-        (cancel-timer real-auto-save-timer)
-        (real-auto-save-start-timer))))
+      (cancel-timer real-auto-save-timer))
+  (real-auto-save-start-timer))
 
 (defun real-auto-save-buffers ()
   "Automatically save all buffers in real-auto-save-buffers-list."
@@ -104,11 +103,9 @@
   (when real-auto-save-mode ;; ON
     (if (buffer-file-name)
         (progn
-          (if real-auto-save-timer
-              (cancel-timer real-auto-save-timer))
-          (real-auto-save-start-timer)
-          (add-to-list 'real-auto-save-buffers-list (current-buffer))))
-    (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list)))
+          (real-auto-save-restart-timer)
+          (add-to-list 'real-auto-save-buffers-list (current-buffer))
+          (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list)))))
 
 
 (provide 'real-auto-save)
