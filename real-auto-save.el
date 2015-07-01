@@ -80,7 +80,7 @@
     (save-excursion
       (dolist (elem real-auto-save-buffers-list)
         (set-buffer elem)
-        (if (and (buffer-file-name) (buffer-modified-p))
+        (if (buffer-modified-p)
             (save-buffer))))
     (real-auto-save-restart-timer)))
 
