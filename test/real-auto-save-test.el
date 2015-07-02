@@ -1,7 +1,7 @@
 ;; How to test:
 ;; load this file
 ;; M-x ert t
-;;
+;;  cf. http://www.gnu.org/software/emacs/manual/html_mono/ert.html
 
 (setq load-path (cons "../" load-path))
 (require 'ert)
