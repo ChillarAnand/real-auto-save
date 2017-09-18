@@ -97,7 +97,7 @@
   "Save your buffers automatically."
   :lighter " RAS"
   :keymap nil
-  :version "0.4"
+  :version "0.5"
 
   (when (not real-auto-save-mode) ;; OFF
     (when (buffer-file-name)
