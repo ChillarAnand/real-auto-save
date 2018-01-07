@@ -77,7 +77,7 @@
 (defun real-auto-save-buffers ()
   "Automatically save all buffers in real-auto-save-buffers-list."
   (progn
-    (save-excursion
+    (save-current-buffer
       (dolist (elem real-auto-save-buffers-list)
         (if (get-buffer elem)
             (progn
