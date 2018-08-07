@@ -29,7 +29,7 @@ Emacs 26.1 introduced `auto-save-visited-mode`. But that new mode is global, and
 For example, to use this mode only for org files, add this to your Emacs config:
 
     (require 'real-auto-save)
-    (add-hook 'org-mode 'real-auto-save)
+    (add-hook 'org-mode-hook 'real-auto-save-mode)
 
 ## Acknowledgments
 
