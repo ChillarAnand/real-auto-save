@@ -98,6 +98,7 @@
       (setq real-auto-save-buffers-list
             (delete (current-buffer) real-auto-save-buffers-list))))
 
+;;;###autoload
 (define-minor-mode real-auto-save-mode
   "Save your buffers automatically."
   :lighter " RAS"
