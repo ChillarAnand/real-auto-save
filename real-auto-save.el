@@ -6,6 +6,7 @@
 ;; Author: Chaoji Li <lichaoji AT gmail DOT com>
 ;;         Anand Reddy Pandikunta <anand21nanda AT gmail DOT com>
 ;; Version: 0.4
+;; Package-Version: 20180803.447
 ;; Date: January 27, 2015
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -55,6 +56,11 @@
   :type 'integer
   :group 'real-auto-save)
 
+(defcustom real-auto-save-interval nil
+  "Silent save of real auto save."
+  :type 'convenience
+  :group 'real-auto-save-silent)
+
 (defvar real-auto-save-buffers-list nil
   "List of buffers that will be saved automatically.")
 
@@ -88,7 +94,9 @@
             (progn
               (set-buffer elem)
               (if (buffer-modified-p)
-                  (with-suppressed-message (save-buffer))))
+                  (if (not real-auto-save-silent)
+                      (with-suppressed-message (save-buffer))
+                    (let ((inhibit-message t)) (save-buffer)))))
           (delete elem real-auto-save-buffers-list))))
     (real-auto-save-restart-timer)))
 
