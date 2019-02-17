@@ -124,6 +124,10 @@
           (add-to-list 'real-auto-save-buffers-list (current-buffer))
           (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list)))))
 
+;; suppress noisy confirming when writing incomplete lines in Makefile.
+(with-eval-after-load 'make-mode
+  (advice-add 'makefile-warn-suspicious-lines :override 'ignore)
+  (advice-add 'makefile-warn-continuations    :override 'ignore))
 
 (provide 'real-auto-save)
 ;;; real-auto-save.el ends here
