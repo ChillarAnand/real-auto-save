@@ -106,6 +106,21 @@
       (setq real-auto-save-buffers-list
             (delete (current-buffer) real-auto-save-buffers-list))))
 
+(defalias 'real-auto-save--disable 'ignore)
+(defun real-auto-save-activate-advice ()
+  "Suppress confirming when writing incomplete lines in Makefile.
+Call `real-auto-save-remove-advice' to remove advice."
+  (interactive)
+  (with-eval-after-load 'make-mode
+    (advice-add 'makefile-warn-suspicious-lines :override 'real-auto-save--disable)
+    (advice-add 'makefile-warn-continuations    :override 'real-auto-save--disable)))
+
+(defun real-auto-save-remove-advice ()
+  "Remove advice of `real-auto-save-activate-advice'."
+  (interactive)
+  (advice-remove 'makefile-warn-suspicious-lines 'real-auto-save--disable)
+  (advice-remove 'makefile-warn-continuations    'real-auto-save--disable))
+
 ;;;###autoload
 (define-minor-mode real-auto-save-mode
   "Save your buffers automatically."
@@ -124,10 +139,6 @@
           (add-to-list 'real-auto-save-buffers-list (current-buffer))
           (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list)))))
 
-;; suppress noisy confirming when writing incomplete lines in Makefile.
-(with-eval-after-load 'make-mode
-  (advice-add 'makefile-warn-suspicious-lines :override 'ignore)
-  (advice-add 'makefile-warn-continuations    :override 'ignore))
 
 (provide 'real-auto-save)
 ;;; real-auto-save.el ends here
