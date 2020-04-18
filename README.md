@@ -1,4 +1,3 @@
-
 [![MELPA](http://melpa.org/packages/real-auto-save-badge.svg)](http://melpa.org/#/real-auto-save)
 
 # real-auto-save
@@ -8,7 +7,7 @@ Automatically save your all your files at regular intervals.
 
 ### MELPA
 
-You can install a snapshot of real-auto-save from the [MELPA](http://melpa.org/#/real-auto-save) repository. 
+You can install a snapshot of real-auto-save from the [MELPA](http://melpa.org/#/real-auto-save) repository.
 
 ### Github
 
@@ -30,6 +29,13 @@ For example, to use this mode only for org files, add this to your Emacs config:
 
     (require 'real-auto-save)
     (add-hook 'org-mode-hook 'real-auto-save-mode)
+
+By default, real-auto-save mode uses idle timer. If your emacs is idle, after `real-auto-save-interval` seconds it will save buffers.
+
+If you want to save all your buffers, every `real-auto-save-interval` seconds, irrespective of idle time, use
+
+    (setq real-auto-save-use-idle-timer nil)
+
 
 ## Acknowledgments
 
