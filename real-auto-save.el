@@ -64,11 +64,6 @@
   :type 'integer
   :group 'real-auto-save)
 
-(defcustom real-auto-save-use-idle-timer t
-  "Use idle timer."
-  :type 'bool
-  :group 'real-auto-save)
-
 (defvar real-auto-save-buffers-list nil
   "List of buffers that will be saved automatically.")
 
@@ -77,11 +72,8 @@
 
 (defun real-auto-save-start-timer ()
   "Start real-auto-save-timer."
-  (if real-auto-save-use-idle-timer
-      (setq real-auto-save-timer
-            (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers))
-    (setq real-auto-save-timer
-          (run-at-time nil real-auto-save-interval 'real-auto-save-buffers))))
+  (setq real-auto-save-timer
+        (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers)))
 
 (defun real-auto-save-restart-timer ()
   "Restart real-auto-save-timer."
