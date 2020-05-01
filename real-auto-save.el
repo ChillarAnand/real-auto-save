@@ -88,9 +88,9 @@
       (if (or (not (buffer-live-p elem))
               (with-current-buffer elem (buffer-file-name)))
           (delete elem real-auto-save-buffers-list)
-        (set-buffer elem)
-        (when (buffer-modified-p)
-          (with-suppressed-message (save-buffer)))))))
+        (with-current-buffer elem
+          (when (buffer-modified-p)
+            (with-suppressed-message (save-buffer))))))))
 
 (defun real-auto-save-remove-buffer-from-list ()
   "If a buffer is killed, remove it from real-auto-save-buffers-list."
