@@ -72,14 +72,9 @@
 
 (defun real-auto-save-start-timer ()
   "Start real-auto-save-timer."
-  (setq real-auto-save-timer
-        (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers)))
-
-(defun real-auto-save-restart-timer ()
-  "Restart real-auto-save-timer."
-  (if real-auto-save-timer
-      (cancel-timer real-auto-save-timer))
-  (real-auto-save-start-timer))
+  (unless real-auto-save-timer
+    (setq real-auto-save-timer
+          (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers))))
 
 (defmacro with-suppressed-message (&rest body)
   "Suppress new messages temporarily in the echo area and the `*Messages*' buffer while BODY is evaluated."
@@ -133,7 +128,7 @@ Call `real-auto-save-remove-advice' to remove advice."
   (when real-auto-save-mode ;; ON
     (if (buffer-file-name)
         (progn
-          (real-auto-save-restart-timer)
+          (real-auto-save-start-timer)
           (add-to-list 'real-auto-save-buffers-list (current-buffer))
           (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list)))))
 
