@@ -117,8 +117,6 @@ Call `real-auto-save-remove-advice' to remove advice."
   "Save your buffers automatically."
   :lighter " RAS"
   :keymap nil
-  :version "0.5"
-
   (when (not real-auto-save-mode) ;; OFF
     (when (buffer-file-name)
       (real-auto-save-remove-buffer-from-list)))
