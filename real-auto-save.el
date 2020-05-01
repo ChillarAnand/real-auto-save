@@ -61,8 +61,8 @@
   "Automatically save all buffers in real-auto-save-buffers-list."
   (save-current-buffer
     (dolist (elm real-auto-save-buffers-list)
-      (if (or (not (buffer-live-p elm))
-              (with-current-buffer elm (buffer-file-name)))
+      (if (and (not (buffer-live-p elm))
+               (with-current-buffer elm (buffer-file-name)))
           (setq real-auto-save-buffers-list
                 (delq elm real-auto-save-buffers-list))
         (with-current-buffer elm
