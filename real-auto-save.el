@@ -98,19 +98,26 @@ Call `real-auto-save-remove-advice' to remove advice."
   (advice-remove 'makefile-warn-suspicious-lines 'real-auto-save--disable)
   (advice-remove 'makefile-warn-continuations    'real-auto-save--disable))
 
+(defun real-auto-save--setup ()
+  "Setup real-auto-save-mode."
+  (unless real-auto-save-timer
+    (setq real-auto-save-timer
+          (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers)))
+  (add-to-list 'real-auto-save-buffers-list (current-buffer)))
+
+(defun real-auto-save--teardown ()
+  "Teardown real-auto-save-mode."
+  (setq real-auto-save-buffers-list
+        (delq (current-buffer) real-auto-save-buffers-list)))
+
 ;;;###autoload
 (define-minor-mode real-auto-save-mode
   "Save your buffers automatically."
   :lighter " RAS"
   :keymap nil
   (if real-auto-save-mode
-      (progn
-        (unless real-auto-save-timer
-          (setq real-auto-save-timer
-                (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers)))
-        (add-to-list 'real-auto-save-buffers-list (current-buffer)))
-    (setq real-auto-save-buffers-list
-          (delq (current-buffer) real-auto-save-buffers-list))))
+      (real-auto-save--setup)
+    (real-auto-save--teardown)))
 
 
 (provide 'real-auto-save)
