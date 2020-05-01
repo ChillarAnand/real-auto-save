@@ -6,6 +6,7 @@
 ;;         Anand Reddy Pandikunta <anand21nanda AT gmail DOT com>
 ;; Version: 0.4
 ;; Date: January 27, 2015
+;; URL: https://github.com/ChillarAnand/real-auto-save
 ;; Package-Requires: ((emacs "24.4"))
 
 ;; This file is free software; you can redistribute it and/or modify
