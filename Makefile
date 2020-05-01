@@ -1,33 +1,51 @@
-.PHONY: test update cask cask-update clean
+## Makefile
 
-update: cask cask-update
+all:
 
-cask:
-	cask
-	EMACS=emacs-24.1 cask
-	EMACS=emacs-24.2 cask
-	EMACS=emacs-24.3 cask
-	EMACS=emacs-24.4 cask
-	EMACS=emacs-24.5 cask
+REPO_USER    := ChillarAnand
+PACKAGE_NAME := real-auto-save
+REPO_NAME    := real-auto-save
 
-cask-update:
-	cask update
-	EMACS=emacs-24.1 cask update
-	EMACS=emacs-24.2 cask update
-	EMACS=emacs-24.3 cask update
-	EMACS=emacs-24.4 cask update
-	EMACS=emacs-24.5 cask update
+EMACS        ?= emacs
+ELS          := $(shell cask files)
 
-test:
-	cask exec ert-runner --quiet
+##################################################
 
-elisp-test-all:
-	cask exec ert-runner --quiet
-	EMACS=emacs-24.1 cask exec ert-runner --quiet
-	EMACS=emacs-24.2 cask exec ert-runner --quiet
-	EMACS=emacs-24.3 cask exec ert-runner --quiet
-	EMACS=emacs-24.4 cask exec ert-runner --quiet
-	EMACS=emacs-24.5 cask exec ert-runner --quiet
+.PHONY: all
+
+all: help
+
+help:
+	$(info )
+	$(info Commands)
+	$(info ========)
+	$(info   - make          # Show this message)
+	$(info   - make build    # Compile Elisp files)
+	$(info   - make test     # Test $(PACKAGE_NAME))
+	$(info )
+	$(info Cleaning)
+	$(info ========)
+	$(info   - make clean    # Clean compiled files)
+	$(info )
+	$(info This Makefile required `cask`)
+	$(info See https://github.com/$(REPO_USER)/$(REPO_NAME)#contribution)
+	$(info )
+
+##############################
+
+%.elc: %.el .cask
+	cask exec $(EMACS) --batch -f batch-byte-compile $<
+
+.cask: Cask
+	cask install
+	touch $@
+
+##############################
+
+build: $(ELS:%.el=%.elc)
+
+test: build
+	cask exec $(EMACS) --batch -L . -l $(PACKAGE_NAME)-tests.el -f cort-test-run
 
 clean:
-	find ./* -name '*.elc' -delete
+	rm -rf $(ELS:%.el=%.elc) .cask

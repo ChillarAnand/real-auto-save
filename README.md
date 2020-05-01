@@ -42,3 +42,18 @@ If you want to save all your buffers, every `real-auto-save-interval` seconds, i
 Thanks to [Steve Purcell](https://github.com/purcell) for reviewing and providing help with development.
 
 Thanks to all contributors!
+
+## Contribution
+- cask
+  - install via brew
+    ```shell
+    brew install cask
+    ```
+
+  - manual install
+    ```shell
+    cd ~/
+    hub clone cask/cask
+    export PATH="$HOME/.cask/bin:$PATH"
+    ```
+
