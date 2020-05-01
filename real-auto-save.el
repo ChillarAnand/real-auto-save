@@ -49,7 +49,11 @@
 (defcustom real-auto-save-interval 10
   "Time interval of real auto save."
   :type 'integer
-  :group 'real-auto-save)
+  :group 'real-auto-save
+  :set (lambda (sym value)
+         (set sym value)
+         (when (bound-and-true-p real-auto-save-buffers-list)
+           (real-auto-save--start-timer 'restart))))
 
 (defvar real-auto-save-buffers-list nil
   "List of buffers that will be saved automatically.")
@@ -73,11 +77,16 @@
 
 (defalias 'real-auto-save--disable 'ignore)
 
+(defun real-auto-save--start-timer (&optional restart)
+  "Start real-auto-save-timer.
+If RESTART is non-nil, restart timer."
+  (when (or restart (not real-auto-save-timer))
+    (setq real-auto-save-timer
+          (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers))))
+
 (defun real-auto-save--setup ()
   "Setup real-auto-save-mode."
-  (unless real-auto-save-timer
-    (setq real-auto-save-timer
-          (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers)))
+  (real-auto-save--start-timer)
   (add-to-list 'real-auto-save-buffers-list (current-buffer))
   (advice-add 'makefile-warn-suspicious-lines :override 'real-auto-save--disable)
   (advice-add 'makefile-warn-continuations    :override 'real-auto-save--disable))
