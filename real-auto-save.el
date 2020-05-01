@@ -70,11 +70,6 @@
 (defvar real-auto-save-timer nil
   "Real auto save timer.")
 
-(defmacro with-suppressed-message (&rest body)
-  "Suppress new messages temporarily in the echo area and the `*Messages*' buffer while BODY is evaluated."
-  (let ((message-log-max nil))
-    `(with-temp-message (or (current-message) "") ,@body)))
-
 (defun real-auto-save-buffers ()
   "Automatically save all buffers in real-auto-save-buffers-list."
   (save-current-buffer
@@ -84,7 +79,9 @@
           (delete elem real-auto-save-buffers-list)
         (with-current-buffer elem
           (when (buffer-modified-p)
-            (with-suppressed-message (save-buffer))))))))
+            (let ((message-log-max nil))
+              (with-temp-message (or (current-message) "")
+                (save-buffer)))))))))
 
 (defalias 'real-auto-save--disable 'ignore)
 (defun real-auto-save-activate-advice ()
