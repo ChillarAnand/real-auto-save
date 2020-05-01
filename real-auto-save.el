@@ -120,8 +120,7 @@ Call `real-auto-save-remove-advice' to remove advice."
   (if real-auto-save-mode
       (when (buffer-file-name)
         (real-auto-save-start-timer)
-        (add-to-list 'real-auto-save-buffers-list (current-buffer))
-        (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list))
+        (add-to-list 'real-auto-save-buffers-list (current-buffer)))
     (real-auto-save-remove-buffer-from-list)))
 
 
