@@ -1,4 +1,4 @@
-;;; real-auto-save.el --- Automatically save your all your buffers/files at regular intervals  -*- lexical-binding: t; -*-
+;;; real-auto-save.el --- Automatically save your buffers/files at regular intervals  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2008-2015, Chaoji Li, Anand Reddy Pandikunta
 
