@@ -75,7 +75,10 @@
               (with-temp-message (or (current-message) "")
                 (save-buffer)))))))))
 
-(defalias 'real-auto-save--disable 'ignore)
+(defun real-auto-save--disable ()
+  "Just do nothing function.
+Unlinke `ignore', this function is not interactive function."
+  (ignore))
 
 (defun real-auto-save--start-timer (&optional restart)
   "Start real-auto-save-timer.
