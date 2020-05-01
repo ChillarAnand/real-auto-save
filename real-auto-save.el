@@ -85,7 +85,8 @@
   "Automatically save all buffers in real-auto-save-buffers-list."
   (save-current-buffer
     (dolist (elem real-auto-save-buffers-list)
-      (if (not (buffer-live-p elem))
+      (if (or (not (buffer-live-p elem))
+              (with-current-buffer elem (buffer-file-name)))
           (delete elem real-auto-save-buffers-list)
         (set-buffer elem)
         (when (buffer-modified-p)
@@ -118,7 +119,7 @@ Call `real-auto-save-remove-advice' to remove advice."
   :lighter " RAS"
   :keymap nil
   (if real-auto-save-mode
-      (when (buffer-file-name)
+      (progn
         (real-auto-save-start-timer)
         (add-to-list 'real-auto-save-buffers-list (current-buffer)))
     (real-auto-save-remove-buffer-from-list)))
