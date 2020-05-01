@@ -84,26 +84,15 @@
                 (save-buffer)))))))))
 
 (defalias 'real-auto-save--disable 'ignore)
-(defun real-auto-save-activate-advice ()
-  "Suppress confirming when writing incomplete lines in Makefile.
-Call `real-auto-save-remove-advice' to remove advice."
-  (interactive)
-  (with-eval-after-load 'make-mode
-    (advice-add 'makefile-warn-suspicious-lines :override 'real-auto-save--disable)
-    (advice-add 'makefile-warn-continuations    :override 'real-auto-save--disable)))
-
-(defun real-auto-save-remove-advice ()
-  "Remove advice of `real-auto-save-activate-advice'."
-  (interactive)
-  (advice-remove 'makefile-warn-suspicious-lines 'real-auto-save--disable)
-  (advice-remove 'makefile-warn-continuations    'real-auto-save--disable))
 
 (defun real-auto-save--setup ()
   "Setup real-auto-save-mode."
   (unless real-auto-save-timer
     (setq real-auto-save-timer
           (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers)))
-  (add-to-list 'real-auto-save-buffers-list (current-buffer)))
+  (add-to-list 'real-auto-save-buffers-list (current-buffer))
+  (advice-add 'makefile-warn-suspicious-lines :override 'real-auto-save--disable)
+  (advice-add 'makefile-warn-continuations    :override 'real-auto-save--disable))
 
 (defun real-auto-save--teardown ()
   "Teardown real-auto-save-mode."
