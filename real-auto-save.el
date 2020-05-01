@@ -86,12 +86,6 @@
           (when (buffer-modified-p)
             (with-suppressed-message (save-buffer))))))))
 
-(defun real-auto-save-remove-buffer-from-list ()
-  "If a buffer is killed, remove it from real-auto-save-buffers-list."
-  (when (member (current-buffer) real-auto-save-buffers-list)
-    (setq real-auto-save-buffers-list
-          (delete (current-buffer) real-auto-save-buffers-list))))
-
 (defalias 'real-auto-save--disable 'ignore)
 (defun real-auto-save-activate-advice ()
   "Suppress confirming when writing incomplete lines in Makefile.
@@ -118,7 +112,8 @@ Call `real-auto-save-remove-advice' to remove advice."
           (setq real-auto-save-timer
                 (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers)))
         (add-to-list 'real-auto-save-buffers-list (current-buffer)))
-    (real-auto-save-remove-buffer-from-list)))
+    (setq real-auto-save-buffers-list
+          (delq (current-buffer) real-auto-save-buffers-list))))
 
 
 (provide 'real-auto-save)
