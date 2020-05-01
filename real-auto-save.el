@@ -85,7 +85,7 @@
   "Automatically save all buffers in real-auto-save-buffers-list."
   (save-current-buffer
     (dolist (elem real-auto-save-buffers-list)
-      (if (not (get-buffer elem))
+      (if (not (buffer-live-p elem))
           (delete elem real-auto-save-buffers-list)
         (set-buffer elem)
         (when (buffer-modified-p)
