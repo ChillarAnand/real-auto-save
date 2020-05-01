@@ -1,4 +1,4 @@
-;;; real-auto-save.el --- Automatically save your all your buffers/files at regular intervals
+;;; real-auto-save.el --- Automatically save your all your buffers/files at regular intervals  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2008-2015, Chaoji Li, Anand Reddy Pandikunta
 
@@ -6,6 +6,7 @@
 ;;         Anand Reddy Pandikunta <anand21nanda AT gmail DOT com>
 ;; Version: 0.4
 ;; Date: January 27, 2015
+;; Package-Requires: ((emacs "24.4"))
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
