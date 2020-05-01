@@ -63,7 +63,8 @@
     (dolist (elem real-auto-save-buffers-list)
       (if (or (not (buffer-live-p elem))
               (with-current-buffer elem (buffer-file-name)))
-          (delete elem real-auto-save-buffers-list)
+          (setq real-auto-save-buffers-list
+                (delq elem real-auto-save-buffers-list))
         (with-current-buffer elem
           (when (buffer-modified-p)
             (let ((message-log-max nil))
