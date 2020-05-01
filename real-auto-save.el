@@ -70,12 +70,6 @@
 (defvar real-auto-save-timer nil
   "Real auto save timer.")
 
-(defun real-auto-save-start-timer ()
-  "Start real-auto-save-timer."
-  (unless real-auto-save-timer
-    (setq real-auto-save-timer
-          (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers))))
-
 (defmacro with-suppressed-message (&rest body)
   "Suppress new messages temporarily in the echo area and the `*Messages*' buffer while BODY is evaluated."
   (let ((message-log-max nil))
@@ -120,7 +114,9 @@ Call `real-auto-save-remove-advice' to remove advice."
   :keymap nil
   (if real-auto-save-mode
       (progn
-        (real-auto-save-start-timer)
+        (unless real-auto-save-timer
+          (setq real-auto-save-timer
+                (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers)))
         (add-to-list 'real-auto-save-buffers-list (current-buffer)))
     (real-auto-save-remove-buffer-from-list)))
 
