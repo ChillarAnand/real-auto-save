@@ -83,21 +83,19 @@
 
 (defun real-auto-save-buffers ()
   "Automatically save all buffers in real-auto-save-buffers-list."
-  (progn
-    (save-current-buffer
-      (dolist (elem real-auto-save-buffers-list)
-        (if (get-buffer elem)
-            (progn
-              (set-buffer elem)
-              (if (buffer-modified-p)
-                  (with-suppressed-message (save-buffer))))
-          (delete elem real-auto-save-buffers-list))))))
+  (save-current-buffer
+    (dolist (elem real-auto-save-buffers-list)
+      (if (not (get-buffer elem))
+          (delete elem real-auto-save-buffers-list)
+        (set-buffer elem)
+        (when (buffer-modified-p)
+          (with-suppressed-message (save-buffer)))))))
 
 (defun real-auto-save-remove-buffer-from-list ()
   "If a buffer is killed, remove it from real-auto-save-buffers-list."
-  (if (member (current-buffer) real-auto-save-buffers-list)
-      (setq real-auto-save-buffers-list
-            (delete (current-buffer) real-auto-save-buffers-list))))
+  (when (member (current-buffer) real-auto-save-buffers-list)
+    (setq real-auto-save-buffers-list
+          (delete (current-buffer) real-auto-save-buffers-list))))
 
 (defalias 'real-auto-save--disable 'ignore)
 (defun real-auto-save-activate-advice ()
@@ -126,11 +124,10 @@ Call `real-auto-save-remove-advice' to remove advice."
       (real-auto-save-remove-buffer-from-list)))
 
   (when real-auto-save-mode ;; ON
-    (if (buffer-file-name)
-        (progn
-          (real-auto-save-start-timer)
-          (add-to-list 'real-auto-save-buffers-list (current-buffer))
-          (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list)))))
+    (when (buffer-file-name)
+      (real-auto-save-start-timer)
+      (add-to-list 'real-auto-save-buffers-list (current-buffer))
+      (add-hook 'kill-buffer-hook 'real-auto-save-remove-buffer-from-list))))
 
 
 (provide 'real-auto-save)
