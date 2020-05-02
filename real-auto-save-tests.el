@@ -26,6 +26,8 @@
 ;;; Code:
 
 (require 'cort)
+(require 'ert-x)
+(require 'subr-x)
 (require 'real-auto-save)
 
 (defmacro cort-deftest-with-equal (name form)
@@ -74,6 +76,36 @@ Example:
 
 
 ;;; test definition
+
+(cort-deftest-with-equal real-auto-save/save-buffers
+  '(((let ((file (make-temp-file "real-auto-save-test--")))
+       (prog1 (progn
+                (with-current-buffer (find-file-noselect file)
+                  (real-auto-save-mode +1)
+                  (insert "real-auto-save test")
+                  (ert-run-idle-timers)
+                  (set-buffer-modified-p nil)
+                  (kill-buffer (current-buffer)))
+                (with-temp-buffer
+                  (insert-file-contents file)
+                  (string-trim (buffer-string))))
+         (ignore-errors (delete-file file))))
+     "real-auto-save test")
+
+    ((let ((file (make-temp-file "real-auto-save-test--")))
+       (prog1 (progn
+                (with-current-buffer (find-file-noselect file)
+                  (real-auto-save-mode +1)
+                  (insert "real-auto-save test")
+                  ;; (ert-run-idle-timers)
+                  (set-buffer-modified-p nil)
+                  (kill-buffer (current-buffer)))
+                (with-temp-buffer
+                  (insert-file-contents file)
+                  (string-trim (buffer-string))))
+         (ignore-errors (delete-file file))))
+     "")))
+
 
 ;; (provide 'real-auto-save-tests)
 
