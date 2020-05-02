@@ -83,7 +83,11 @@ Unlinke `ignore', this function is not interactive function."
 (defun real-auto-save--start-timer (&optional restart)
   "Start real-auto-save-timer.
 If RESTART is non-nil, restart timer."
-  (when (or restart (not real-auto-save-timer))
+  (when restart
+    (when (timerp real-auto-save-timer)
+      (cancel-timer real-auto-save-timer))
+    (setq real-auto-save-timer nil))
+  (unless real-auto-save-timer
     (setq real-auto-save-timer
           (run-with-idle-timer real-auto-save-interval t 'real-auto-save-buffers))))
 
