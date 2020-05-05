@@ -63,15 +63,15 @@
   "Automatically save all buffers in real-auto-save-buffers-list."
   (save-current-buffer
     (dolist (elm real-auto-save-buffers-list)
-      (if (and (not (buffer-live-p elm))
+      (if (and (buffer-live-p elm)
                (with-current-buffer elm (buffer-file-name)))
-          (setq real-auto-save-buffers-list
-                (delq elm real-auto-save-buffers-list))
-        (with-current-buffer elm
-          (when (buffer-modified-p)
-            (let ((message-log-max nil))
-              (with-temp-message (or (current-message) "")
-                (save-buffer)))))))))
+          (with-current-buffer elm
+            (when (buffer-modified-p)
+              (let ((message-log-max nil))
+                (with-temp-message (or (current-message) "")
+                  (save-buffer)))))
+        (setq real-auto-save-buffers-list
+              (delq elm real-auto-save-buffers-list))))))
 
 (defun real-auto-save--disable ()
   "Just do nothing function.
