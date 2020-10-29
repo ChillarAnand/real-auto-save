@@ -101,6 +101,9 @@ If RESTART is non-nil, restart timer."
   (setq real-auto-save-buffers-list
         (delq (current-buffer) real-auto-save-buffers-list)))
 
+(defun turn-on-real-auto-save () (real-auto-save-mode 1))
+(defun turn-off-real-auto-save () (real-auto-save-mode -1))
+
 ;;;###autoload
 (define-minor-mode real-auto-save-mode
   "Save your buffers automatically."
@@ -109,6 +112,10 @@ If RESTART is non-nil, restart timer."
   (if real-auto-save-mode
       (real-auto-save--setup)
     (real-auto-save--teardown)))
+
+;;;###autoload
+(define-globalized-minor-mode global-real-auto-save-mode
+  real-auto-save-mode turn-on-real-auto-save)
 
 (provide 'real-auto-save)
 ;;; real-auto-save.el ends here
