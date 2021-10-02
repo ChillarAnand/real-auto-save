@@ -101,8 +101,22 @@ If RESTART is non-nil, restart timer."
   (setq real-auto-save-buffers-list
         (delq (current-buffer) real-auto-save-buffers-list)))
 
-(defun turn-on-real-auto-save () (real-auto-save-mode 1))
-(defun turn-off-real-auto-save () (real-auto-save-mode -1))
+(defun real-auto-save-turn-on ()
+  "Turn on Real-Auto-Save Mode.
+
+This function is designed to be added to hooks, for example:
+  (add-hook \\='c-mode-hook #\\='real-auto-save-turn-turn-on)"
+  (real-auto-save-mode 1))
+
+(defun real-auto-save-turn-off ()
+  "Turn off Real-Auto-Save Mode.
+
+This function is designed to be added to hooks, for example:
+  (add-hook \\='message-mode-hook #\\='real-auto-save-turn-off)
+
+Useful in combination when `global-real-auto-save-mode' is used to
+opt-out of auto-saving on a per-buffer or per-mode basis."
+    (real-auto-save-mode -1))
 
 ;;;###autoload
 (define-minor-mode real-auto-save-mode
@@ -115,7 +129,7 @@ If RESTART is non-nil, restart timer."
 
 ;;;###autoload
 (define-globalized-minor-mode global-real-auto-save-mode
-  real-auto-save-mode turn-on-real-auto-save)
+  real-auto-save-mode real-auto-save-turn-on)
 
 (provide 'real-auto-save)
 ;;; real-auto-save.el ends here
