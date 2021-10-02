@@ -102,11 +102,12 @@ If RESTART is non-nil, restart timer."
         (delq (current-buffer) real-auto-save-buffers-list)))
 
 (defun real-auto-save-turn-on ()
-  "Turn on Real-Auto-Save Mode.
+  "Turn on Real-Auto-Save Mode for current if it's visiting a file.
 
 This function is designed to be added to hooks, for example:
   (add-hook \\='c-mode-hook #\\='real-auto-save-turn-turn-on)"
-  (real-auto-save-mode 1))
+  (when buffer-file-name
+    (real-auto-save-mode +1))
 
 (defun real-auto-save-turn-off ()
   "Turn off Real-Auto-Save Mode.
