@@ -108,7 +108,7 @@ If RESTART is non-nil, restart timer."
 This function is designed to be added to hooks, for example:
   (add-hook \\='c-mode-hook #\\='real-auto-save-turn-turn-on)"
   (when buffer-file-name
-    (real-auto-save-mode +1))
+    (real-auto-save-mode +1)))
 
 ;;;###autoload
 (defun real-auto-save-turn-off ()
